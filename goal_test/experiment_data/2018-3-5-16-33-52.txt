@@ -1,1 +1,0 @@
-i	x_goal	y_goal	x_increasement	y_increasement	w_current	quadrant1	1.58202	-1.41439	0.3	-0.3	0.999208	42	1.94014	-1.75281	0.3	-0.3	0.999382	4

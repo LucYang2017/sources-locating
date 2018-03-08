@@ -1,1 +1,0 @@
-i	x_goal	y_goal	x_increasement	y_increasement	w_current	quadrant
