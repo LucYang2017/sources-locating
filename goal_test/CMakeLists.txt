@@ -209,3 +209,11 @@ add_dependencies(filerw ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TA
 target_link_libraries(filerw
   ${catkin_LIBRARIES}
 )
+
+add_executable(collector
+  src/collector.cpp
+)
+add_dependencies(collector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(collector
+  ${catkin_LIBRARIES}
+)

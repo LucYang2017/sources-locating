@@ -80,8 +80,6 @@ void sensor_subCallback(const goal_test::alcohol_concentration &msg)
 {
     sensor_data.concentration_1 = msg.concentration_1;
     sensor_data.concentration_2 = msg.concentration_2;
-    ROS_INFO("Concentartion 1 is %lf.",sensor_data.concentration_1); 
-    ROS_INFO("Concentartion 2 is %lf.",sensor_data.concentration_2);
 }
 
 
@@ -159,87 +157,25 @@ int main(int argc, char *argv[])
     <<"z_current"<<"\t"<<"concentration_1"<<"\t"<<"concentration_2"<<"\t"<<"quadrant"<<"\n"; 
 
     //开始寻源
-    for(i=0;i<SEARCHING_TIME;i++)
+    for(i=0;1;i++)
     {   
-        ROS_INFO("SEARCHING No.%d",i); 
 
-        //取停止十秒内的浓度平均值
-        float sensor_temp_1=0;
-        float sensor_temp_2=0;
-        for(int s_i=0;s_i<10;s_i++)
-        {
-            ros::spinOnce();
-            sensor_temp_1+=sensor_data.concentration_1;
-            sensor_temp_2+=sensor_data.concentration_2;
-            ros::Duration(1.0).sleep();
-        }
-        current_concentration[i].concentration_1=sensor_temp_1/10;
-        current_concentration[i].concentration_2=sensor_temp_2/10;
-
+        ofstream fout(str);
+        ros::spinOnce();
 
         listener.lookupTransform(odom_frame,base_frame, ros::Time(0), transform);
         x_current=transform.getOrigin().x();
         y_current=transform.getOrigin().y();
         z_current=transform.getRotation().getZ();
-        ROS_INFO("z_current=%f",z_current);
-
-        quadrant=quadrantCaculator(z_current,current_concentration[i]);
+        quadrant=quadrantCaculator(z_current,sensor_data);
         
-        
+        fout<<i<<"\t"<<x_current<<"\t"<<y_current<<"\t"<<z_current<<
+        "\t"<<sensor_data.concentration_1<<"\t"<<sensor_data.concentration_2<<"\t"<<quadrant<<"\n";
 
-        //定义搜寻时的步长
-        float step_length=0.3;
-
-        //计算increasement
-        do
-        {
-                switch (quadrant)
-            {
-                case 1:
-                    x_increasement=step_length,y_increasement=step_length;
-                    break;
-                case 2:
-                    x_increasement=-step_length,y_increasement=step_length;
-                    break;
-                case 3:
-                    x_increasement=-step_length,y_increasement=-step_length;
-                    break;
-                case 4:
-                    x_increasement=step_length,y_increasement=-step_length;
-                    break;
-                default:
-                    {
-                        ROS_INFO("Moving at random."); 
-                        x_increasement=(rand()%20)/10.0-1;
-                        y_increasement=(rand()%20)/10.0-1;
-                    }
-            }
-        if(i>1)
-            {
-                
-            }
-       
-        x_goal=x_current+x_increasement;
-        y_goal=y_current+y_increasement;
-        ROS_INFO("x_increasement=%f,y_increasement=%f",x_increasement,y_increasement);
-        ROS_INFO("x_goal=%f,y_goal=%f",x_goal,y_goal);
-        }
-        while(!isInRange(x_goal, y_goal));
-        
-
-        //赋值并发送目标
-        assignGoal(goal[i+1],x_goal,y_goal);
-        sendGoal(ac,goal[i+1]);
-  
-
-
-        fout<<i<<"\t"<<x_goal<<"\t"<<y_goal<<"\t"<<x_increasement<<"\t"<<y_increasement<<"\t"
-        <<z_current<<"\t"<<current_concentration[i].concentration_1<<"\t"<<current_concentration[i].concentration_2<<"\t"<<quadrant<<"\n";         
-        //ROS_INFO("Concentration 1 is %f.",current_concentration[i].concentration_1);
-        //ROS_INFO("Concentration 2 is %f.",current_concentration[i].concentration_2);
-
+        ros::Duration(1.0).sleep();       
+        fout.close();   
     }
-    fout.close();
+    
 
     /*ROS_INFO("SEARCHING FININSHED");
     for(i=1;i<SEARCHING_TIME;i++)
