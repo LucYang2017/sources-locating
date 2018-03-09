@@ -1,0 +1,8 @@
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant

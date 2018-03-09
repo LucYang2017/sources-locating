@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	char str[100];
 	sprintf(str,"/home/luc/catkin_ws/src/goal_test/experiment_data/%d-%d-%d-%d-%d-%d.txt",
 	tm_now->tm_year+1900, tm_now->tm_mon+1, tm_now->tm_mday, tm_now->tm_hour, tm_now->tm_min, tm_now->tm_sec);
-	ofstream fout(str);
+	ofstream fout(str,ios::app);
 
 
     //初始化节点
@@ -155,12 +155,12 @@ int main(int argc, char *argv[])
     //将表头写入文件
     fout<<"i"<<"\t"<<"x_goal"<<"\t"<<"y_goal"<<"\t"<<"x_increasement"<<"\t"<<"y_increasement"<<"\t"
     <<"z_current"<<"\t"<<"concentration_1"<<"\t"<<"concentration_2"<<"\t"<<"quadrant"<<"\n"; 
-
+    
     //开始寻源
-    for(i=0;1;i++)
+    for(i=0;ros::ok();i++)
     {   
 
-        ofstream fout(str);
+        
         ros::spinOnce();
 
         listener.lookupTransform(odom_frame,base_frame, ros::Time(0), transform);
@@ -169,14 +169,15 @@ int main(int argc, char *argv[])
         z_current=transform.getRotation().getZ();
         quadrant=quadrantCaculator(z_current,sensor_data);
         
+        
         fout<<i<<"\t"<<x_current<<"\t"<<y_current<<"\t"<<z_current<<
         "\t"<<sensor_data.concentration_1<<"\t"<<sensor_data.concentration_2<<"\t"<<quadrant<<"\n";
 
         ros::Duration(1.0).sleep();       
-        fout.close();   
+        
     }
     
-
+fout.close();  
     /*ROS_INFO("SEARCHING FININSHED");
     for(i=1;i<SEARCHING_TIME;i++)
         ROS_INFO("x=%f y=%f concentration 1=%f concentration 2=%f",goal[i].target_pose.pose.position.x,goal[i].target_pose.pose.position.y, current_concentration[i].concentration_1,current_concentration[i].concentration_2);

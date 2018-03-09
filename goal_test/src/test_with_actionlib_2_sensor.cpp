@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	char str[100];
 	sprintf(str,"/home/luc/catkin_ws/src/goal_test/experiment_data/%d-%d-%d-%d-%d-%d.txt",
 	tm_now->tm_year+1900, tm_now->tm_mon+1, tm_now->tm_mday, tm_now->tm_hour, tm_now->tm_min, tm_now->tm_sec);
-	ofstream fout(str);
+	ofstream fout(str,ios::app);
 
 
     //初始化节点
@@ -159,10 +159,13 @@ int main(int argc, char *argv[])
     <<"z_current"<<"\t"<<"concentration_1"<<"\t"<<"concentration_2"<<"\t"<<"quadrant"<<"\n"; 
 
     //开始寻源
-    for(i=0;i<SEARCHING_TIME;i++)
+    for(i=0;ros::ok();i++)
     {   
         ROS_INFO("SEARCHING No.%d",i); 
-
+        
+        if(i>0)
+            sendGoal(ac,goal[i]);//应该会原地不动。因为现在的i就是上一轮的i+1
+        
         //取停止十秒内的浓度平均值
         float sensor_temp_1=0;
         float sensor_temp_2=0;
