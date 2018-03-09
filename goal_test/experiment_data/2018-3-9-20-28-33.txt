@@ -1,0 +1,4 @@
+i	x_goal	y_goal	x_increasement	y_increasement	z_current	concentration_1	concentration_2	quadrant
+0	1.81856	0.457332	-0.3	0.3	0.625038	6.4	2.2	2
+1	1.57515	0.0941253	-0.3	-0.3	0.980512	5.2	4.2	3
+2	1.88963	-0.168799	0.3	-0.3	-0.862867	3.9	-1.5	4

@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
 	sprintf(str,"/home/luc/catkin_ws/src/goal_test/experiment_data/%d-%d-%d-%d-%d-%d.txt",
 	tm_now->tm_year+1900, tm_now->tm_mon+1, tm_now->tm_mday, tm_now->tm_hour, tm_now->tm_min, tm_now->tm_sec);
 	ofstream fout(str,ios::app);
+    ofstream fout_details("/home/luc/catkin_ws/src/goal_test/experiment_data/concentration-details.txt",ios::app);
 
 
     //初始化节点
@@ -172,6 +173,7 @@ int main(int argc, char *argv[])
         for(int s_i=0;s_i<10;s_i++)
         {
             ros::spinOnce();
+            fout_details<<i<<sensor_data.concentration_1<<sensor_data.concentration_2;
             sensor_temp_1+=sensor_data.concentration_1;
             sensor_temp_2+=sensor_data.concentration_2;
             ros::Duration(1.0).sleep();
@@ -243,6 +245,7 @@ int main(int argc, char *argv[])
 
     }
     fout.close();
+    fout_details.close();
 
     /*ROS_INFO("SEARCHING FININSHED");
     for(i=1;i<SEARCHING_TIME;i++)
