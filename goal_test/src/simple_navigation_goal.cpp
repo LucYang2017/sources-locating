@@ -2,8 +2,7 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <ros/time.h>
-
-
+#include "config.h"
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
@@ -20,41 +19,65 @@ int main(int argc, char** argv){
 
   move_base_msgs::MoveBaseGoal goal;
 
-  //we'll send a goal to the robot to move 1 meter forward
-  goal.target_pose.header.frame_id = "odom";
-  goal.target_pose.header.stamp = ros::Time::now();
-  int i=0;
-  while(1){
+  tf::TransformListener listener;
+  tf::StampedTransform transform;
+  std::string odom_frame="/map";
+  std::string base_frame="/base_footprint";//两个frame的名称很重要
 
-      goal.target_pose.pose.position.x = -1.7;
-      goal.target_pose.pose.position.y = -1.0;
-      goal.target_pose.pose.orientation.w = 1.0;
+  try
+  {
+      listener.waitForTransform(odom_frame, base_frame, ros::Time(), ros::Duration(2.0) );
+  }
+  catch(tf::TransformException& ex)
+  {
+      ROS_ERROR("%s", ex.what());
+  }
+
+
+
+  //we'll send a goal to the robot to move 1 meter forward
+
+int i=1;
+  while(ros::ok()){
+
+      i++;
+      listener.lookupTransform(odom_frame , base_frame , ros::Time(0), transform);
+      goal.target_pose.header.frame_id = "map";
+      goal.target_pose.header.stamp = ros::Time::now();
+      switch (i%4)
+      {
+        case 1:
+          goal.target_pose.pose.position.x=2; 
+          goal.target_pose.pose.position.y=-0.5;
+          break;
+        case 2:
+          goal.target_pose.pose.position.x=2; 
+          goal.target_pose.pose.position.y=0.5;
+          break;
+        case 3:
+          goal.target_pose.pose.position.x=1; 
+          goal.target_pose.pose.position.y=0.5;
+          break;
+        case 0:
+          goal.target_pose.pose.position.x=1; 
+          goal.target_pose.pose.position.y=-0.5;
+          break;
+      }
+      
+
+      goal.target_pose.pose.orientation.z = 1.0;
 
       ROS_INFO("Sending goal");
       ac.sendGoal(goal);
 
       ac.waitForResult(ros::Duration(60.0));
+      ros::Duration(3.0).sleep();
 
       if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-        ROS_INFO("Hooray, the base moved 1 meter forward %d",i);
+        ROS_INFO("Hooray, the base moved 1 meter forward ");
       else
         ROS_INFO("The base failed to move forward 1 meter for some reason");
-      i++;
-      goal.target_pose.pose.position.x = -0.70;
-      goal.target_pose.pose.position.y = -0.5;
-      goal.target_pose.pose.orientation.w = 1.0;
 
-            ROS_INFO("Sending goal");
-      ac.sendGoal(goal);
-      //ros::Duration(60.0).sleep();
-
-      ac.waitForResult();
-
-      if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-        ROS_INFO("Hooray, the base moved 1 meter forward %d",i);
-      else
-        ROS_INFO("The base failed to move forward 1 meter for some reason");
-      i++;
   }
 
 
