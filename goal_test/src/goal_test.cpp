@@ -79,12 +79,6 @@ void assignGoal(move_base_msgs::MoveBaseGoal& goal,double x,double y){
 void moveAgctions_GoalCaculator(int quadrant)
 {
     move_base_msgs::MoveBaseGoal next_goal;
-
-    goal.target_pose.header.frame_id = "map";
-    goal.target_pose.header.stamp = ros::Time::now();
-    goal.target_pose.pose.position.x=0; 
-    goal.target_pose.pose.position.y=0;
-    goal.target_pose.pose.orientation.z = 1.0;
 }
 void sensor_subCallback(const goal_test::alcohol_concentration &msg)
 {

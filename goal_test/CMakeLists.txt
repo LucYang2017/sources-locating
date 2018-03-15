@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   serial
   costmap_2d
+  move_base_msgs
+
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -43,6 +45,8 @@ add_service_files(FILES
 generate_messages(DEPENDENCIES
   std_msgs
   geometry_msgs
+  move_base_msgs
+
 )
 
 ################################################
@@ -215,5 +219,13 @@ add_executable(collector
 )
 add_dependencies(collector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(collector
+  ${catkin_LIBRARIES}
+)
+
+add_executable(experiment_data_publisher
+  src/experiment_data_publisher.cpp
+)
+add_dependencies(experiment_data_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(experiment_data_publisher
   ${catkin_LIBRARIES}
 )

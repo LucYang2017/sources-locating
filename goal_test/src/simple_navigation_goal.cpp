@@ -3,6 +3,8 @@
 #include <actionlib/client/simple_action_client.h>
 #include <ros/time.h>
 #include "config.h"
+#include <cmath>
+
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
@@ -38,34 +40,19 @@ int main(int argc, char** argv){
   //we'll send a goal to the robot to move 1 meter forward
 
 int i=1;
+double alpha;
   while(ros::ok()){
 
       i++;
       listener.lookupTransform(odom_frame , base_frame , ros::Time(0), transform);
       goal.target_pose.header.frame_id = "map";
       goal.target_pose.header.stamp = ros::Time::now();
-      switch (i%4)
-      {
-        case 1:
-          goal.target_pose.pose.position.x=2; 
-          goal.target_pose.pose.position.y=-0.5;
-          break;
-        case 2:
-          goal.target_pose.pose.position.x=2; 
-          goal.target_pose.pose.position.y=0.5;
-          break;
-        case 3:
-          goal.target_pose.pose.position.x=1; 
-          goal.target_pose.pose.position.y=0.5;
-          break;
-        case 0:
-          goal.target_pose.pose.position.x=1; 
-          goal.target_pose.pose.position.y=-0.5;
-          break;
-      }
-      
-
+      alpha=transform.getRotation().z();
+      goal.target_pose.pose.position.x=transform.getOrigin().x()+cos(asin(alpha)*2); 
+      goal.target_pose.pose.position.y=transform.getOrigin().y()+sin(asin(alpha)*2);
       goal.target_pose.pose.orientation.z = 1.0;
+
+      ROS_INFO("x: %f  y: %f alpha: %f ",goal.target_pose.pose.position.x,goal.target_pose.pose.position.y,alpha);
 
       ROS_INFO("Sending goal");
       ac.sendGoal(goal);
@@ -77,9 +64,8 @@ int i=1;
         ROS_INFO("Hooray, the base moved 1 meter forward ");
       else
         ROS_INFO("The base failed to move forward 1 meter for some reason");
-
+        }
   }
 
 
-  return 0;
-}
+

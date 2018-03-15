@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
         listener.lookupTransform(odom_frame,base_frame, ros::Time(0), transform);
         x_current=transform.getOrigin().x();
         y_current=transform.getOrigin().y();
-        z_current=transform.getOrigin().z();
+        z_current=transform.getRotation().z();
         ROS_INFO("z_current=%f",z_current);
 
         quadrant=quadrantCaculator(z_current,current_concentration[i]);
