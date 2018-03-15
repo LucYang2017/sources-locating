@@ -69,7 +69,7 @@ void sendGoal(MoveBaseClient& actionlibClient,MoveBaseGoal& goal)
 }
 
 void assignGoal(move_base_msgs::MoveBaseGoal& goal,double x,double y){
-    goal.target_pose.header.frame_id = "odom";
+    goal.target_pose.header.frame_id = "map";
     goal.target_pose.header.stamp = ros::Time::now();
     goal.target_pose.pose.position.x=x; 
     goal.target_pose.pose.position.y=y;
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
     //定义tf相关常量
     tf::TransformListener listener;
     tf::StampedTransform transform;
-    std::string odom_frame="/odom";
+    std::string odom_frame="/map";
     std::string base_frame="/base_footprint";//两个frame的名称很重要
 
     //tf坐标转换
