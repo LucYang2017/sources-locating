@@ -229,3 +229,11 @@ add_dependencies(experiment_data_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} $
 target_link_libraries(experiment_data_publisher
   ${catkin_LIBRARIES}
 )
+
+add_executable(finder
+  src/finder.cpp
+)
+add_dependencies(finder ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(finder
+  ${catkin_LIBRARIES}
+)

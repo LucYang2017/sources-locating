@@ -1,5 +1,4 @@
 #include "config.h"
-#include <cmath>
 #include <ctime>
 #include <iostream>
 #include <time.h>

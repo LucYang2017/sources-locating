@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     time(&now) ;
     tm_now = localtime(&now) ;
 	char str[100];
-	sprintf(str,"/home/luc/catkin_ws/src/goal_test/experiment_data/%d-%d-%d-%d-%d-%d.txt",
+	sprintf(str,"/home/luc/catkin_ws/src/goal_test/experiment_data/data-%d-%d-%d-%d-%d-%d.txt",
 	tm_now->tm_year+1900, tm_now->tm_mon+1, tm_now->tm_mday, tm_now->tm_hour, tm_now->tm_min, tm_now->tm_sec);
 	ofstream fout(str,ios::app);
 
@@ -71,7 +71,9 @@ int main(int argc, char *argv[])
         experiment_data.position.target_pose.pose.position.x = transform.getOrigin().x(); 
         experiment_data.position.target_pose.pose.position.y = transform.getOrigin().y();
         experiment_data.position.target_pose.pose.orientation.z = transform.getRotation().z();
+
         ros::spinOnce();
+
         data_pub.publish(experiment_data);
 
         fout<<experiment_data.position.target_pose.pose.position.x<<"\t"
@@ -83,6 +85,6 @@ int main(int argc, char *argv[])
         loopRate.sleep();
     }
 
-    
+
     fout.close();  
 }
